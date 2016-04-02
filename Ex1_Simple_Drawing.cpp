@@ -8,7 +8,7 @@
 #include <GL/glut.h>
 #endif
 
-//Ô¤¶¨ÒåÒ»Ğ©³£ÓÃÓï¾äÒÔÌá¸ß¿É¶ÁĞÔ
+//é¢„å®šä¹‰ä¸€äº›å¸¸ç”¨è¯­å¥ä»¥æé«˜å¯è¯»æ€§
 #define _RED_COLOR_ _A_;glColor3ub(255, 0, 0)
 #define _GREEN_COLOR_ _A_;glColor3ub(0, 255, 0)
 #define _BLUE_COLOR_ _A_;glColor3ub(0, 0, 255)
@@ -16,23 +16,23 @@
 #define _A_ sgn_sop=0
 #define _FILLED_OR_LINE_	if(fill_state){glBegin(GL_LINE_LOOP);}else{glBegin(GL_POLYGON);}
 
-GLsizei wh = 600, ww = 800; //³õÊ¼´°¿Ú´óĞ¡
-GLfloat size = 3.0;   //³õÊ¼»¯Ä£Ê½6ÏÂµÄ·½¿é´óĞ¡
-int status = 2,npnt=0;//statusÖ¸¶¨µ±Ç°»æÍ¼Ä£Ê½,npnt¼ÇÂ¼µ±Ç°Í¼ÔªÒÑ¾­È·¶¨µÄ×ø±êµã
-float xm, ym, xmm, ymm;//ÁÙÊ±´¢´æ×ø±êÒÔÊµÏÖRubberĞ§¹û
-char sgn_sop = 0,fill_state=0;//sgn_sopÓÃÓÚÖ¸Ê¾ÊÇ·ñÃ¿´Î»æÍ¼¶¼Ëæ»ú¸Ä±äÑÕÉ«,fill_stateÖ¸Ê¾¶à±ßĞÎÌî³ä·½Ê½
-const float n_round = 256;//·Ö¸îÔ²ĞÎµÄ±ßÊı
-const float PI = 3.1415926;//³£Á¿PI
+GLsizei wh = 600, ww = 800; //åˆå§‹çª—å£å¤§å°
+GLfloat size = 3.0;   //åˆå§‹åŒ–æ¨¡å¼6ä¸‹çš„æ–¹å—å¤§å°
+int status = 2,npnt=0;//statusæŒ‡å®šå½“å‰ç»˜å›¾æ¨¡å¼,npntè®°å½•å½“å‰å›¾å…ƒå·²ç»ç¡®å®šçš„åæ ‡ç‚¹
+float xm, ym, xmm, ymm;//ä¸´æ—¶å‚¨å­˜åæ ‡ä»¥å®ç°Rubberæ•ˆæœ
+char sgn_sop = 0,fill_state=0;//sgn_sopç”¨äºæŒ‡ç¤ºæ˜¯å¦æ¯æ¬¡ç»˜å›¾éƒ½éšæœºæ”¹å˜é¢œè‰²,fill_stateæŒ‡ç¤ºå¤šè¾¹å½¢å¡«å……æ–¹å¼
+const float n_round = 256;//åˆ†å‰²åœ†å½¢çš„è¾¹æ•°
+const float PI = 3.1415926;//å¸¸é‡PI
 
 void main_menu(int id);
 
-//´°¿Ú×ø±ê½á¹¹Ìå
+//çª—å£åæ ‡ç»“æ„ä½“
 struct vx{
 	float x;
 	float y;
 }vex[4];
 
-//ÉèÖÃÑÕÉ«
+//è®¾ç½®é¢œè‰²
 void set_color(int id)
 {
 	switch (id) {
@@ -44,7 +44,7 @@ void set_color(int id)
 	}
 }
 
-//Ä£Ê½6ÏÂ»æÖÆÕı·½ĞÎ
+//æ¨¡å¼6ä¸‹ç»˜åˆ¶æ­£æ–¹å½¢
 void drawSquare(int x, int y)
 {
 
@@ -62,7 +62,7 @@ void drawSquare(int x, int y)
 	glFlush();
 }
 
-//»æÖÆÏß¶Î
+//ç»˜åˆ¶çº¿æ®µ
 void drawLine(int x1, int y1,int x2,int y2)
 {
 
@@ -75,7 +75,7 @@ void drawLine(int x1, int y1,int x2,int y2)
 	glFlush();
 }
 
-//»æÖÆÈı½ÇĞÎ
+//ç»˜åˆ¶ä¸‰è§’å½¢
 void drawTriangle(int x1, int y1, int x2, int y2,int x3,int y3)
 {
 
@@ -90,14 +90,14 @@ void drawTriangle(int x1, int y1, int x2, int y2,int x3,int y3)
 	glFlush();
 }
 
-//Í¨¹ı¶à±ßĞÎÄ£Äâ»æÖÆÔ²ĞÎ
+//é€šè¿‡å¤šè¾¹å½¢æ¨¡æ‹Ÿç»˜åˆ¶åœ†å½¢
 void drawCircle(float x1, float y1, float x2, float y2)
 {
 	int n;
 	float ox, oy, r;
-	ox = (x1 + x2) / 2.0;//¸ù¾İÆğÊ¼µãÖ®ÖĞµãÈ·¶¨Ô²ĞÄ
+	ox = (x1 + x2) / 2.0;//æ ¹æ®èµ·å§‹ç‚¹ä¹‹ä¸­ç‚¹ç¡®å®šåœ†å¿ƒ
 	oy = (float)wh-(y1 + y2) / 2.0;
-	r = sqrt((x2-x1)*(x2 - x1)+ (y2 - y1)*(y2 - y1))/2.0;//¸ù¾İÆğÊ¼µã¾àÀëÈ·¶¨°ë¾¶
+	r = sqrt((x2-x1)*(x2 - x1)+ (y2 - y1)*(y2 - y1))/2.0;//æ ¹æ®èµ·å§‹ç‚¹è·ç¦»ç¡®å®šåŠå¾„
 	_FILLED_OR_LINE_
 	for (n = 0; n <= n_round; n++)
 	{
@@ -108,17 +108,17 @@ void drawCircle(float x1, float y1, float x2, float y2)
 }
 
 
-//¸Ä±ä´°¿Ú´óĞ¡Ê±µ÷ÕûÊÓ´°ÌåÊôĞÔ
+//æ”¹å˜çª—å£å¤§å°æ—¶è°ƒæ•´è§†çª—ä½“å±æ€§
 void reshape(GLsizei w, GLsizei h)
 {
 
 /* adjust clipping box */
 
    	glMatrixMode(GL_PROJECTION);
-   	glLoadIdentity(); 
+   	glLoadIdentity();
    	glOrtho(0.0, (GLdouble)w, 0.0, (GLdouble)h, -1.0, 1.0);
    	glMatrixMode(GL_MODELVIEW);
-   	glLoadIdentity(); 
+   	glLoadIdentity();
 
 /* adjust viewport and clear */
 
@@ -130,18 +130,18 @@ void reshape(GLsizei w, GLsizei h)
 /* set global size for use by drawing routine */
 
 	ww = w;
-   	wh = h; 
+   	wh = h;
 }
 
-//³õÊ¼»¯
+//åˆå§‹åŒ–
 void init(void)
 {
 
    	glViewport(0,0,ww,wh);
-	
+
 	/* Pick 2D clipping window to match size of screen window. This choice avoids having to scale object coordinates each time window is resized */
    	glMatrixMode(GL_PROJECTION);
-   	glLoadIdentity(); 
+   	glLoadIdentity();
    	glOrtho(0.0, (GLdouble) ww , 0.0, (GLdouble) wh , -1.0, 1.0);
 
    	glClearColor (1.0, 1.0, 1.0, 1.0);
@@ -149,7 +149,7 @@ void init(void)
 	glFlush();
 }
 
-//Êó±ê¶¯×÷»Øµ÷º¯Êı
+//é¼ æ ‡åŠ¨ä½œå›è°ƒå‡½æ•°
 void mousemotion(int px, int py)
 {
 	if (px&&py&&status==6)
@@ -158,14 +158,14 @@ void mousemotion(int px, int py)
 	}
 }
 
-//Passive×´Ì¬Êó±ê¶¯×÷»Øµ÷º¯Êı,ÓÃÓÚÊµÏÖRubberĞ§¹û
+//PassiveçŠ¶æ€é¼ æ ‡åŠ¨ä½œå›è°ƒå‡½æ•°,ç”¨äºå®ç°Rubberæ•ˆæœ
 void passmmo(int x, int y)
 {
 	xmm = xm;
 	ymm = ym;
 	if(x)xm=x;
 	if(y)ym=y;
-	if (npnt)//¸ù¾İnpntÓëstatusµÄÖµÅĞ¶Ïµ±Ç°Í¼ĞÎÊÇ·ñ»æÖÆÍê³É
+	if (npnt)//æ ¹æ®npntä¸statusçš„å€¼åˆ¤æ–­å½“å‰å›¾å½¢æ˜¯å¦ç»˜åˆ¶å®Œæˆ
 	{
 		switch (status)
 		{
@@ -181,7 +181,7 @@ void passmmo(int x, int y)
 				glRectf(vex[0].x, wh-vex[0].y, xmm, wh-ymm);
 				glFlush();
 			}
-			glRectf(vex[0].x, wh-vex[0].y, xm, wh-ym); 
+			glRectf(vex[0].x, wh-vex[0].y, xm, wh-ym);
 			glFlush();break;
 		case 4:
 				if (xmm&&ymm)
@@ -203,7 +203,7 @@ void passmmo(int x, int y)
 	}
 }
 
-//Êó±êµã»÷»Øµ÷º¯Êı
+//é¼ æ ‡ç‚¹å‡»å›è°ƒå‡½æ•°
 void mouse(int btn, int state, int x, int y)
 {
 	if (btn == GLUT_LEFT_BUTTON && state == GLUT_DOWN)
@@ -211,11 +211,11 @@ void mouse(int btn, int state, int x, int y)
 		if (npnt==0)
 		{
 			if (status != 6)
-			{			
+			{
 				vex[0].x = x;
 				vex[0].y = y;
 				npnt++;
-				glLogicOp(GL_XOR);//XORĞ´ÈëÊµÏÖRubberĞ§¹û
+				glLogicOp(GL_XOR);//XORå†™å…¥å®ç°Rubberæ•ˆæœ
 			}else
 			{
 				drawSquare(x, y);
@@ -226,7 +226,7 @@ void mouse(int btn, int state, int x, int y)
 		else if (npnt == 1)
 		{
 			vex[1].x = x;
-			vex[1].y = y;	
+			vex[1].y = y;
 			npnt++;
 			if (status == 2)
 			{
@@ -263,7 +263,7 @@ void mouse(int btn, int state, int x, int y)
 	}
 }
 
-//Ö÷²Ëµ¥µ÷ÓÃ
+//ä¸»èœå•è°ƒç”¨
 void main_menu(int id)
 {
     switch(id)
@@ -276,7 +276,7 @@ void main_menu(int id)
 	case 7:fill_state = 0; break;
 	case 8:fill_state++; break;
 	case 10:case 11:case 12:case 13:
-		set_color(id); 
+		set_color(id);
 		break;
 	case 3831:
 		printf("An OpenGL Experiment by X. Huang.,\nComputer Science Dept., Xiamen University @2016.\nAll rights not reserved : ) \n"); break;
@@ -285,7 +285,7 @@ void main_menu(int id)
     glutPostRedisplay();
 }
 
-//¼üÅÌ¿ì½İ¼ü
+//é”®ç›˜å¿«æ·é”®
 void keyboard(unsigned char key, int x, int y)
 {
 	if (key >= '0'&&key <= '6')
@@ -296,8 +296,8 @@ void keyboard(unsigned char key, int x, int y)
    switch (key) {
     case 27:case 'Q':case 'q':exit(0);break;//Press 'ESC' or 'Q' to quit.
 	case'l':case'L':size = 2 * size;break;//Press 'L' to enlarge the size of simple square under mode 'Square on Path',
-	case's':case'S':						// and 'S' to shrink it. 
-		  if (size > 1) 
+	case's':case'S':						// and 'S' to shrink it.
+		  if (size > 1)
 			   {
 				   size = size/2;}break;
 	case'r':case'R':_RED_COLOR_; break;//'R' for change color to Red,
@@ -307,7 +307,7 @@ void keyboard(unsigned char key, int x, int y)
    }
 }
 
-//ÏÔÊ¾º¯Êı
+//æ˜¾ç¤ºå‡½æ•°
 void display(void)
 {}
 
@@ -327,43 +327,43 @@ int sub_menu_set_type, sub_menu_set_color,sub_menu_set_fill;
 	glutDisplayFunc(display);
     glutKeyboardFunc (keyboard);
 	glEnable(GL_COLOR_LOGIC_OP);
-	
-	//ÉèÖÃÓÒ¼ü×Ó²Ëµ¥
-    sub_menu_set_type = glutCreateMenu(main_menu); 		
-    glutAddMenuEntry("Line(2)",2); 	
+
+	//è®¾ç½®å³é”®å­èœå•
+    sub_menu_set_type = glutCreateMenu(main_menu);
+    glutAddMenuEntry("Line(2)",2);
     glutAddMenuEntry("Rectangle(3)",3);
-	glutAddMenuEntry("Circle(4)",4); 	
+	glutAddMenuEntry("Circle(4)",4);
     glutAddMenuEntry("Triangle(5)",5);
 	glutAddMenuEntry("Square On Path(6)",6);
 
-	sub_menu_set_color = glutCreateMenu(main_menu); 		
-    glutAddMenuEntry("Red(R)",10); 	
-    glutAddMenuEntry("Green(G)",11); 
-	glutAddMenuEntry("Blue(B)",12); 
-	glutAddMenuEntry("Random(W)",13); 
+	sub_menu_set_color = glutCreateMenu(main_menu);
+    glutAddMenuEntry("Red(R)",10);
+    glutAddMenuEntry("Green(G)",11);
+	glutAddMenuEntry("Blue(B)",12);
+	glutAddMenuEntry("Random(W)",13);
 
 	sub_menu_set_fill = glutCreateMenu(main_menu);
 	glutAddMenuEntry("Filled", 7);
 	glutAddMenuEntry("Lines Only", 8);
 
-	glutCreateMenu(main_menu); 	
+	glutCreateMenu(main_menu);
     glutAddSubMenu("Set Type", sub_menu_set_type);
-	glutAddSubMenu("Set Color", sub_menu_set_color); 
+	glutAddSubMenu("Set Color", sub_menu_set_color);
 	glutAddSubMenu("Set Fill Method", sub_menu_set_fill);
 	glutAddMenuEntry("Clear(1)", 1);
 	glutAddMenuEntry("About", 3831);
 	glutAddMenuEntry("Exit(0/Q/Esc)", 0);
 
-	//³õÊ¼²ÎÊı
-    glutAttachMenu(GLUT_RIGHT_BUTTON); 
-	glLogicOp(GL_COPY); 
+	//åˆå§‹å‚æ•°
+    glutAttachMenu(GLUT_RIGHT_BUTTON);
+	glLogicOp(GL_COPY);
 	glColor3ub((char)rand() % 256, (char)rand() % 256, (char)rand() % 256);
-	
-	//ÔÚ¿ØÖÆÌ¨´òÓ¡ÓÃ»§°ïÖú
+
+	//åœ¨æ§åˆ¶å°æ‰“å°ç”¨æˆ·å¸®åŠ©
 	printf("Default Settings\n-------------------\n Drawing Line/ Filled Polygon/ Pixel Writing Method: COPY\n");
 	printf("\nShort Cuts\n-------------------\nSystem: 0/Q/Esc - Quit 1 - Clear\nColor : R - Red B - Blue G - Green W - Random\nType  : 2 - Line 3 - Rectangle 4 - Circle\n        5 - Triangle 6 - Square on Mouse Path(L - Larger S - Smaller)\n");
 
-	//½øÈëÖ÷º¯ÊıÑ­»·
+	//è¿›å…¥ä¸»å‡½æ•°å¾ªç¯
    	glutMainLoop();
     return 0;
 }
