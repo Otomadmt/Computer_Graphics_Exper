@@ -15,6 +15,7 @@ The perspective view is set in the reshape callback */
 #include <fstream> 
 #include <string>
 #include <iostream>
+#include <cstdio>
 using namespace std;
 #define _MAX_VRX_ 2001
 #define _MAX_NOR_ 1501
@@ -23,6 +24,7 @@ using namespace std;
 
 float vertices[_MAX_VRX_][3];
 int nFaces, nVertices, nEdges;
+GLfloat  scale = 1;
 float normals[_MAX_NOR_][3];
 int colorset[3][3] = { { 62,88,94 },{ 58,70,81 },{ 129,133,126 } };
 
@@ -97,38 +99,55 @@ void init()
 
 void display(void)
 {
-
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+	init();
 	/* Update viewer position in modelview matrix */
-
 	glLoadIdentity();
 	gluLookAt(viewer[0], viewer[1], viewer[2], 0.0, 0.0, 0.0, 0.0, 1.0, 0.0);
-
-	
-	/* rotate cube */
-
+	glScalef(scale, scale, scale);
+	glTranslatef(Tran[0], Tran[1], Tran[2]);
 	glRotatef(theta[0], 1.0, 0.0, 0.0);
 	glRotatef(theta[1], 0.0, 1.0, 0.0);
 	glRotatef(theta[2], 0.0, 0.0, 1.0);
-	glTranslatef(Tran[0], Tran[1],Tran[2]);
-	//init();
+	glTranslatef(0, 0, 0);
 	disp_off();
 	glFlush();
 	glutSwapBuffers();
+	//printf("Viewer:%lf %lf %lf\nTrans:%lf %lf %lf\nTheta:%lf %lf %lf\nScale:%lf\n", viewer[0], viewer[1], viewer[2], Tran[0], Tran[1], Tran[2], theta[0], theta[1], theta[2], scale);
 }
 
 void mouse(int btn, int state, int x, int y)
 {
+	GLfloat thep = 2.0 / scale;
 	if (btn == GLUT_LEFT_BUTTON && state == GLUT_DOWN) axis = 0;
 	if (btn == GLUT_MIDDLE_BUTTON && state == GLUT_DOWN) axis = 1;
 	if (btn == GLUT_RIGHT_BUTTON && state == GLUT_DOWN) axis = 2;
-	theta[axis] += 3.0;
+	theta[axis] += thep;
 	if (theta[axis] > 360.0) theta[axis] -= 360.0;
 	display();
 }
 
-void reset_color()
+void reset_camera()
+{
+	viewer[0] = 0;
+	viewer[1] = 0;
+	viewer[2] = 5;
+	cout << "Camera reset finished." << endl;
+}
+
+void reset_all()
+{
+	reset_camera();
+	scale = 1;
+	theta[0] = 0;
+	theta[1] = 0;
+	theta[2] = 0;
+	Tran[0] = 0;
+	Tran[1] = 0;
+	Tran[2] = 0;
+	cout << "All reset finished." << endl;
+}
+
+/*void reset_color()
 {
 	cout << "Enter 3 sets of RGB color values you want to set:\n";
 	for (int i = 0; i < 3; i++)
@@ -140,37 +159,68 @@ void reset_color()
 	}
 	init();
 	display();
-}
+}*/
 
 void keys(unsigned char key, int x, int y)
 {
+	/* Use g, G, v, V, b and B keys to move viewer */
+	/* Use x, X, y, Y, z, Z keys to rotate model */
+	switch (key)
+	{
+	case('g') : viewer[0] -= 0.1; break;
+	case('G') : viewer[0] += 0.1; break;
+	case('v') : viewer[1] -= 0.1; break;
+	case('V') : viewer[1] += 0.1; break;
+	case('B') : viewer[2] += 0.1; break;
+	case('b') : 
+				if (scale + 5 - viewer[2] < 4.0)
+				{
+					viewer[2] -= 0.1;
+				}
+				else
+				{
+					cout << "Camera position is too close." << endl;
+				} break; 
+	case('x') : axis = 0; theta[0] += 3.0; break;
+	case('X') : axis = 0; theta[0] -= 3.0; break;
+	case('y') : axis = 1; theta[1] += 3.0; break;
+	case('Y') : axis = 1; theta[1] -= 3.0; break;
+	case('z') : axis = 2; theta[2] += 3.0; break;
+	case('Z') : axis = 2; theta[2] -= 3.0; break;
+	case('s') : if (scale+5-viewer[2] < 4.0)
+				{ scale += 0.1; }
+				else 
+				{
+					cout << "Maxmium scaling level reached."<<endl;
+				} break;
+	case('S') : if (scale > 0.1)
+	{
+		scale -= 0.1;
+	}
+				else
+				{
+					cout << "Maximum scaling level reached." << endl;
+				} break;
+	case('r') : case('R') : reset_camera(); break;
+	case('i') : case('I') : reset_all(); break;
+	}
 
-	/* Use x, X, y, Y, z, and Z keys to move viewer */
-
-	/*if (key == 'x') viewer[0] -= 1.0;
-	if (key == 'X') viewer[0] += 1.0;
-	if (key == 'y') viewer[1] -= 1.0;
-	if (key == 'Y') viewer[1] += 1.0;
-	if (key == 'z') viewer[2] -= 1.0;
-	if (key == 'Z') viewer[2] += 1.0;*/
-	if (key == 38 ) { Tran[0] += 1; }
-	if (key == 40 ) { Tran[0] -= 1; }
-	if (key == 39) { Tran[1] -= 1; }
-	if (key == 37) { Tran[1] += 1; }
-	if (key == 'o') { Tran[2] += 0.1; }
-	if (key == 'i') { Tran[2] -= 0.1; }
-	if (key == 'r' || key == 'R') reset_color();
-	//cout << (int)key <<"Here"<< endl;
-	display();
+	if (theta[axis] > 360.0)
+	{
+		theta[axis] -= 360.0;
+	}
+	display(); 
 }
 
 void skeys(int key, int x, int y)
 {
-	if (key == 101) { Tran[1] += 0.1; }
-	if (key == 103) { Tran[1] -= 0.1; }
-	if (key == 100) { Tran[0] -= 0.1; }
-	if (key == 102) { Tran[0] += 0.1; }
-	//cout << (int)key << "SHere" << endl;
+	double tranp = 0.1/scale;
+	if (key == GLUT_KEY_UP) { Tran[1] += tranp; }
+	if (key == GLUT_KEY_DOWN) { Tran[1] -= tranp; }
+	if (key == GLUT_KEY_LEFT) { Tran[0] -= tranp; }
+	if (key == GLUT_KEY_RIGHT) { Tran[0] += tranp; }
+	if (key == GLUT_KEY_F1) { Tran[2] += tranp; }
+	if (key == GLUT_KEY_F2) { Tran[2] -= tranp; }
 	display();
 }
 
@@ -186,11 +236,9 @@ void myReshape(int w, int h)
 		2.0* (GLfloat)h / (GLfloat)w, 2.0, 20.0);
 	else glFrustum(-2.0, 2.0, -2.0 * (GLfloat)w / (GLfloat)h,
 		2.0* (GLfloat)w / (GLfloat)h, 2.0, 20.0);
-
 	/* Or we can use gluPerspective */
-
 	/* gluPerspective(45.0, w/h, -10.0, 10.0); */
-	cout << "Reshape\n";
+
 	glMatrixMode(GL_MODELVIEW);
 }
 
@@ -201,7 +249,7 @@ void main(int argc, char **argv)
 	do
 	{
 		cout << "Enter the full file name of OFF model:" << endl;
-		//cin >> filepath;
+		cin >> filepath;
 	} while (!load_off(&filepath));
 	glutInitDisplayMode(GLUT_DOUBLE | GLUT_RGB | GLUT_DEPTH);
 	glutInitWindowSize(500, 500);
